@@ -137,7 +137,7 @@ class Engine:
 
         s += "== " + str(self.score) + "\n"
 
-        return s  
+        return s
 
 
 """eng = Engine()

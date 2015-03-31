@@ -1,6 +1,7 @@
 import platform
 import sys, socket
 
+
 def read_board(s):
 	board = []
 	lines = s.recv(4096).decode("utf-8").split("\n")
@@ -12,69 +13,25 @@ def read_board(s):
 			return (board, int(line[3:]))
 
 		if line.startswith("FIN"):
-			print("Done: " + line[4:])
+			# print("Done: " + line[4:])
 			sys.exit()
 
 		board.append(line.split(" "))
 
 	return board
 
-def up(s):
+def upBot(s):
 	s.send("u\n".encode("utf-8"))
 
-def down(s):
+def downBot(s):
 	s.send("d\n".encode("utf-8"))
 
-def left(s):
+def leftBot(s):
 	s.send("l\n".encode("utf-8"))
 
-def right(s):
+def rightBot(s):
 	s.send("r\n".encode("utf-8"))
 
-def rotate_board(board, count):
-    for c in range(0, count):
-        rotated = [[0 for i in range(len(board))] for i in range(len(board[0]))]
-
-        rows = len(board)
-
-        for row_idx in range(0, rows):
-            columns = len(board[row_idx])
-            for el_idx in range(0, columns):
-                rotated[columns - el_idx - 1][row_idx] = board[row_idx][el_idx]
-
-        board = rotated
-
-    return rotated
-
-def merge_count(board):
-	c = 0
-	s = 0
-
-	for x in range(0, len(board[0])):
-		y = 0
-		y_value = 0
-
-		while y < len(board):
-			if not board[y][x]:
-				y += 1
-				continue
-
-			if not y_value:
-				y_value = board[y][x]
-				y += 1
-				continue
-
-			if y_value == board[y][x]:
-				c += 1
-				y += 1
-				y_value = 0
-				s += y_value * 2
-			else:
-				y_value = board[y][x]
-
-			y += 1
-
-	return (c, s)
 
 def botsetup(name):
 	if platform.system() == 'Windows':
