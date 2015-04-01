@@ -1,9 +1,26 @@
 import engine, sys, random, os
 import curses
 
+COLORS = {
+		0:	  0,
+        2:    1,
+        4:    2,
+        8:    3,
+        16:   4,
+        32:   5,
+        64:   6,
+        128:  7,
+        256:  8,
+        512:  9,
+        1024: 10,
+        2048: 11,
+        # just in case people set an higher goal they still have colors
+        4096: 12,
+        8192: 11,
+    }
+
 def makegame():
 	game = engine.Engine()
-	# print(game.board)
 	return game
 
 def cursesBoard(board, screen):
@@ -11,7 +28,7 @@ def cursesBoard(board, screen):
 	screen.border(0)
 	for row in enumerate(board):
 		for item in enumerate(row[1]):
-			screen.addstr(8+3*row[0], 30+6*item[0], str(item[1]))
+			screen.addstr(8+3*row[0], 40+6*item[0], str(item[1]), curses.color_pair(COLORS[item[1]]))
 	screen.refresh()
 
 def copyBoard(board):
@@ -79,7 +96,6 @@ def solveGame(runs, screen):
 		counter += 1
 		
 		cursesBoard(mainGame.board, screen)
-		# print("bestMove: " + move)
 
 		if move == 'u':
 			mainGame.up()
@@ -90,13 +106,8 @@ def solveGame(runs, screen):
 		elif move == 'r':
 			mainGame.right()
 
-		# print()
-
 		if mainGame.is_board_locked():
 			end = True
 			
-			print("Game over")
-			print("Moves: " + str(counter))
-			print("Score: " + str(mainGame.score))
-			return(mainGame.score)
+			return(mainGame)
 
