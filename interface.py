@@ -52,7 +52,7 @@ while x != ord('3'):
 
 	screen.border(0)
 	screen.addstr(2, 24, "2048 Machine Learning AI", curses.color_pair(1))
-	screen.addstr(3, 29, "- Hammad Jutt", curses.color_pair(0))
+	screen.addstr(3, 20, "- Hammad Jutt & Shivansh Singla", curses.color_pair(0))
 	screen.addstr(7, 5, "Runs per move: " + str(runs), curses.color_pair(2))
 
 
