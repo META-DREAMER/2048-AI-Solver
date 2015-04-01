@@ -126,38 +126,4 @@ class Engine:
         if val in score:
             return score[val]
 
-        # too high, lets just .. be happy for them.
         return val*2
-
-    def to_string(self):
-        s = ""
-
-        for row in self.board:
-            s += ' '.join(map(str, row)) + "\n"
-
-        s += "== " + str(self.score) + "\n"
-
-        return s
-
-
-"""eng = Engine()
-eng.add_random_block()
-eng.add_random_block()
-eng.print_board()
-
-while True:
-    key = input('u / d / l / r: ').strip()
-
-    if key == 'u':
-        eng.up()
-    elif key == 'd':
-        eng.down()
-    elif key == 'l':
-        eng.left()
-    elif key == 'r':
-        eng.right()
-    else:
-        continue
-
-    eng.print_board()
-    """

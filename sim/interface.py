@@ -1,96 +1,50 @@
-#!/usr/bin/env python3
-import engine, sys, uuid, random, subprocess, socket, os, time
-import platform
+from solver import *
 
-# if len(sys.argv) < 3:
-# 	sys.stderr.write("Usage: interface.py <randomseed> <executable>\n")
-# 	sys.exit()
-
-# set up seed from arguments
 # random.seed(sys.argv[1])
 
-# helpers for writing and reading to the socket connection
-def write(conn, str):
-	conn.send(str.encode("utf-8"))
 
-def read(conn):
-	return conn.recv(1024).decode("utf-8").strip()
+def get_param(prompt_string):
+     screen.clear()
+     screen.border(0)
+     screen.addstr(2, 2, prompt_string)
+     screen.refresh()
+     input = screen.getstr(10, 10, 60)
+     return input
 
 
-def run_simulation(bot, game):
 
-	identifier = ""
+x = 0
+runs = 5
+score = 0
 
-	if platform.system() == 'Windows':
-		print ("Must connect differently")
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.bind(("", 8765))
-		print (bot)
-		process = subprocess.Popen([sys.executable, bot, '8765'])
-	else:
-		# create local unix socket for communication with child
-		s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		s.settimeout(2)
-		identifier = str(uuid.uuid4())
-		s_path = "/tmp/4096-" + identifier
-		s.bind(s_path)
+while x != ord('3'):
+	screen = curses.initscr()
+	curses.noecho()
+	curses.start_color()
+	curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
 
-		# launch child
-		process = subprocess.Popen([bot, s_path])
-	s.listen(1)
-	conn, addr = s.accept()
+	screen.clear()
+	screen.border(0)
+	screen.addstr(2, 20, "2048 Machine Learning Algorithm", curses.color_pair(1))
+	screen.addstr(4, 20, "Number of runs per move: " + str(runs))
 
-	# set up engine and game meta information
-	
-	move_count = 0
-	game_name = read(conn)
 
-	# sys.stderr.write("Game: " + game_name + "\n")
-	# sys.stderr.write("Identifier: " + identifier + "\n")
+	screen.addstr(6, 25, "Please select an option")
+	screen.addstr(7, 25, "1 - Set number of runs")
+	screen.addstr(8, 25, "2 - Run Algorithm")
+	screen.addstr(9, 25, "3 - Exit")
+	screen.addstr(13, 25, "Score: " + str(score))
+	screen.refresh()
 
-	# give client board and process input until finished
-	write(conn, game.to_string())
+	x = screen.getch()
 
-	firstMove = True
-	output = []
+	if x == ord('1'):
+		runs = int(get_param("Enter the number of runs per move"))
+		curses.endwin()
+	if x == ord('2'):
+		score = solveGame(runs, screen)
+		curses.endwin()
+	if x == ord('3'):
+		curses.endwin()
 
-	try:
-		while conn:
-			c = read(conn)
-			if firstMove:
-				output.append(c)
-				firstMove = False
-			if c == 'u':
-				game.up()
-			elif c == 'd':
-				game.down()
-			elif c == 'l':
-				game.left()
-			elif c == 'r':
-				game.right()
-
-			write(conn, game.to_string())
-
-			move_count += 1
-
-			if game.is_board_locked():
-				write(conn, "FIN " + str(game.score) + "\n")
-
-				
-
-	except (socket.timeout):
-		sys.stderr.write(" * Socket timed out.\n")
-	#except (BrokenPipeError, ConnectionResetError):
-	except:
-		pass
-
-	# give score
-	# sys.stderr.write("Score: " + str(game.score) + "\n")
-	# sys.stderr.write("Moves: " + str(move_count) + "\n")
-
-	# clean up
-	process.terminate()
-	if not platform.system() == 'Windows':
-		os.remove(s_path)
-	output.append(game.score)
-	return output
+curses.endwin()

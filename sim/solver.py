@@ -1,99 +1,102 @@
-from interface import *
-
+import engine, sys, random, os
+import curses
 
 def makegame():
 	game = engine.Engine()
 	# print(game.board)
 	return game
 
+def cursesBoard(board, screen):
+	screen.clear()
+	screen.border(0)
+	for row in enumerate(board):
+		for item in enumerate(row[1]):
+			screen.addstr(8+3*row[0], 30+6*item[0], str(item[1]))
+	screen.refresh()
+
+def copyBoard(board):
+	newBoard = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+	for row in enumerate(board):
+		for item in enumerate(row[1]):
+			newBoard[row[0]][item[0]] = item[1]
+
+	return newBoard
+
+def run_random(board, move):
+	randomGame = makegame()
+	randomGame.board = copyBoard(board)
+	moveList = ['u','d','l','r']
+	numMoves = 0
+
+	sendMove(randomGame, move)
+
+	while True:
+		if randomGame.is_board_locked():
+			break
+
+		randMove = moveList[random.randint(0, 3)]
+		sendMove(randomGame, randMove)
+		numMoves += 1
+
+	return [randomGame.score, numMoves]
 
 def bestMove(board, runs):
-	simGame = makegame()
-	simGame.board = board
-	upAvg = 0
-	downAvg = 0
-	leftAvg = 0
-	rightAvg = 0
-	upNum = 1
-	downNum = 1
-	leftNum = 1
-	rightNum = 1
 
-	for x in range(runs):
-		random.seed(123 + 6*x)
-		result = run_simulation('./bot.py', simGame)
-		print(result)
-		if result[0] == 'u':
-			upAvg += result[1]
-			upNum += 1
-		elif result[0] == 'd':
-			downAvg += result[1]
-			downNum += 1
-		elif result[0] == 'l':
-			leftAvg += result[1]
-			leftNum += 1
-		elif result[0] == 'r':
-			rightAvg += result[1]
-			rightNum += 1
+	average = 0
+	bestScore = 0
+	moveList = ['u','d','l','r']
 
-	# print("1: " + str(upAvg))
-	# print("2: " + str(downAvg))
-	# print("3: " + str(leftAvg))
-	# print("4: " + str(rightAvg))
+	for moveDir in moveList:
+		average = 0
+		for x in range(runs):
+			simGame = makegame()
+			simGame.board = copyBoard(board)
+			result = run_random(board, moveDir)
+			average += result[0]
 
-	upAvg = upAvg/upNum
-	downAvg = downAvg/downNum
-	leftAvg = leftAvg/leftNum
-	rightAvg = rightAvg/rightNum
+		average = average/runs
+		if average > bestScore:
+			bestScore = average
+			move = moveDir
+	return move
 
-	# print("5: " + str(upAvg))
-	# print("6: " + str(downAvg))
-	# print("7: " + str(leftAvg))
-	# print("8: " + str(rightAvg))
-
-	scoreList = [upAvg,downAvg,leftAvg,rightAvg]
-	highScore = max(scoreList)
-	# print("9: " + str(highScore))
-	index = scoreList.index(highScore)
-
-	if index == 0:
-		return 'u'
-	elif index == 1:
-		return 'd'
-	elif index == 2:
-		return 'l'
-	elif index == 3:
-		return 'r'
-
-
-
-def displayBoard(board):
-	print(board)
-
-
-end = False
-mainGame = makegame()
-runs = 5
-counter = 0
-
-while not end:
-
-	move = bestMove(mainGame.board, runs)
-	counter += 1
-
+def sendMove(game, move):
 	if move == 'u':
-		mainGame.up()
+		game.up()
 	elif move == 'd':
-		mainGame.down()
+		game.down()
 	elif move == 'l':
-		mainGame.left()
+		game.left()
 	elif move == 'r':
-		mainGame.right()
+		game.right()
 
-	# displayBoard(mainGame.board)
+def solveGame(runs, screen):
+	end = False
+	mainGame = makegame()
+	counter = 0
+	while not end:
+		move = bestMove(mainGame.board, runs)
+		counter += 1
+		
+		cursesBoard(mainGame.board, screen)
+		# print("bestMove: " + move)
 
-	if mainGame.is_board_locked():
-		end = True
-		print(counter)
-		print("Game over")
-		#end game
+		if move == 'u':
+			mainGame.up()
+		elif move == 'd':
+			mainGame.down()
+		elif move == 'l':
+			mainGame.left()
+		elif move == 'r':
+			mainGame.right()
+
+		# print()
+
+		if mainGame.is_board_locked():
+			end = True
+			
+			print("Game over")
+			print("Moves: " + str(counter))
+			print("Score: " + str(mainGame.score))
+			return(mainGame.score)
+
