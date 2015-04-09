@@ -1,7 +1,6 @@
 import engine, random, curses
 
 COLORS = {0:0,2:1,4:2,8:3,16:4,32:5,64:6,128:7,256:8,512:9,1024:10,2048:11,4096:12,8192:13,16384:13,32768:12}
-moveList = ['u','d','l','r']
 
 def makeGame():
 	game = engine.Engine()
@@ -22,56 +21,49 @@ def copyBoard(board):
 
 def runRandom(board, firstMove):
 	randomGame = makeGame()
+	moveList = randomGame.moveList
 	randomGame.board = copyBoard(board)
-	sendMove(randomGame, firstMove)
+	randomGame.makeMove(firstMove)
 
 	while True:
-		if randomGame.isBoardLocked():
+		if randomGame.gameOver():
 			break
-		randMove = moveList[random.randint(0, 3)]
-		sendMove(randomGame, randMove)
+		randMove = moveList[random.randint(0, len(moveList) - 1)]
+		randomGame.makeMove(randMove)
 
 	return randomGame.score
 
-def bestMove(board, runs):
+def bestMove(game, runs):
 	average = 0
 	bestScore = 0
+	moveList = game.moveList
 
 	for moveDir in moveList:
 		average = 0
 		for x in range(runs):
-			result = runRandom(board, moveDir)
+			result = runRandom(game.board, moveDir)
 			average += result
 		average = average/runs
-
 		if average >= bestScore:
 			bestScore = average
 			move = moveDir
 
 	return move
 
-def sendMove(game, move):
-	if move == moveList[0]:
-		game.up()
-	elif move == moveList[1]:
-		game.down()
-	elif move == moveList[2]:
-		game.left()
-	elif move == moveList[3]:
-		game.right()
-
 def solveGame(runs, screen):
 	mainGame = makeGame()
 	counter = 0
+	moveList = mainGame.moveList
+
 	while True:
-		if mainGame.isBoardLocked():
+		if mainGame.gameOver():
 			break
 		if runs > 0:
-			move = bestMove(mainGame.board, runs)
+			move = bestMove(mainGame, runs)
 		else:
-			move = moveList[random.randint(0, 3)]
-		sendMove(mainGame, move)
+			move = moveList[random.randint(0, len(moveList) - 1)]
+		mainGame.makeMove(move)
 		screen.clear()
-		screen.border(0)
 		drawBoard(mainGame.board, screen)
+
 	return(mainGame)

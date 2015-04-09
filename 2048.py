@@ -2,7 +2,6 @@ from solver import *
 
 x = 0
 runs = 0
-score = 0
 
 screen = curses.initscr()
 curses.curs_set(0)
@@ -30,22 +29,19 @@ def getRuns():
 	screen.border(0)
 	screen.addstr(12, 14, "Enter the number of runs per move: ")
 	screen.refresh()
-	runs = -1
 	try:
 		runs = int(screen.getstr(12, 50, 4))
 	except ValueError:
-		pass
+		runs = 0
 	screen.clear()
 	curses.noecho()
-	if runs > 0:
-		return runs
-	return 0
+	return runs
 
 def drawEnd(game, screen):
 	screen.clear()
 	drawBoard(game.board, screen)
 	screen.addstr(15, 5, "Score: " + str(game.score),curses.color_pair(3))
-	screen.addstr(16, 5, "Moves: " + str(game.moves),curses.color_pair(3))
+	screen.addstr(16, 5, "Moves: " + str(game.numMoves),curses.color_pair(3))
 	screen.addstr(18, 5, "GAME OVER",curses.color_pair(4))
 	screen.refresh()
 
