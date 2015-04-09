@@ -1,7 +1,7 @@
 import random
 
 class Engine:
-	''' initializing Engine class'''
+
     def __init__(self):
         self.size = 4
         self.board = [[0 for i in range(self.size)] for i in range(self.size)]
@@ -12,9 +12,9 @@ class Engine:
         self.addRandBlock()
 
     def scoreBonus(self, val):
-    ''' 
-    Returns the score to add when tile merged
-    '''
+        """
+        Returns the score to add when tile merged
+        """
         score = {
             2: 4, 
             4: 8, 
@@ -36,9 +36,9 @@ class Engine:
         return score[val]
 
     def rotateBoard(self, board, count):
-    ''' 
-    Rotate the board in order to make moves in different directions 
-    '''
+        ''' 
+        Rotate the board in order to make moves in different directions 
+        '''
         for c in range(count):
             rotated = [[0 for i in range(self.size)] for i in range(self.size)]
 
@@ -51,9 +51,9 @@ class Engine:
         return rotated
 
     def makeMove(self, moveDir):
-    ''' 
-    Shift the board to make the given move
-    '''
+        ''' 
+        Shift the board to make the given move
+        '''
         # Check if the game is already over
         if self.gameOver(): 	
             pass
@@ -122,11 +122,11 @@ class Engine:
 
 
     def addRandBlock(self, val=None):
-    '''
-    Places a random tile (either 2 or 4) on the board
-    tile = 4: 10 percent chance 
-    tile = 2: 90 percent chance
-    '''
+        '''
+        Places a random tile (either 2 or 4) on the board
+        tile = 4: 10 percent chance 
+        tile = 2: 90 percent chance
+        '''
         avail = self.availableSpots()
 
         if avail:
@@ -139,9 +139,9 @@ class Engine:
 
 
     def availableSpots(self):
-    ''' 
-    Returns a list of all empty spaces on the board
-    '''
+        ''' 
+        Returns a list of all empty spaces on the board
+        '''
         spots = []
         for row in enumerate(self.board):
             for col in enumerate(row[1]):
@@ -150,9 +150,9 @@ class Engine:
         return spots
 
     def gameOver(self):
-    '''
-    Returns True if no move can be made
-    '''
+        '''
+        Returns True if no move can be made
+        '''
         if self.availableSpots():
             return False
 
