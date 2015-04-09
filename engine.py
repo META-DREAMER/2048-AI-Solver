@@ -26,7 +26,8 @@ class Engine:
             4096: 8192,
             8192: 16384,
             16384: 32768,
-            32768: 65536
+            32768: 65536,
+            65536: 131072,
         }
         return score[val]
 
@@ -41,29 +42,6 @@ class Engine:
             board = rotated
 
         return rotated
-
-    # def rotateBoard(self, board, count):
-    #     rotated = [[0 for i in range(self.size)] for i in range(self.size)]
-
-    #     if count == 1:
-    #         for row in range(self.size):
-    #             for col in range(self.size):
-    #                 rotated[self.size - col - 1][row] = board[row][col]
-    #     elif count == 2:
-    #         for row in range(self.size):
-    #             for col in range(self.size):
-    #                 rotated[self.size - col - 1][row] = board[row][col]
-    #         for row in range(self.size):
-    #             for col in range(self.size):
-    #                 rotated[self.size - col - 1][row] = board[row][col]
-    #     elif count == 3:
-    #         for row in range(self.size):
-    #             for col in range(self.size):
-    #                 rotated[col][self.size - row-1] = board[row][col]
-    #     else:
-    #         return board
-
-    #     return rotated
 
     def makeMove(self, moveDir):
         if self.gameOver():
