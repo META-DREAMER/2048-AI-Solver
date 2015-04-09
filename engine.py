@@ -1,6 +1,7 @@
 import random
 
 class Engine:
+	''' initializing Engine class'''
     def __init__(self):
         self.size = 4
         self.board = [[0 for i in range(self.size)] for i in range(self.size)]
@@ -9,7 +10,7 @@ class Engine:
         self.moveList = ['d','l','u','r']
         self.addRandBlock()
         self.addRandBlock()
-
+	''' Function to add bonus score on merging'''
     def scoreBonus(self, val):
         score = {
             2: 4, 
@@ -30,7 +31,7 @@ class Engine:
             65536: 131072,
         }
         return score[val]
-
+	''' Rotate the board in order to make moves in different directions '''
     def rotateBoard(self, board, count):
         for c in range(count):
             rotated = [[0 for i in range(self.size)] for i in range(self.size)]
@@ -42,16 +43,16 @@ class Engine:
             board = rotated
 
         return rotated
-
+	''' Make the appropriate move '''
     def makeMove(self, moveDir):
-        if self.gameOver():
+        if self.gameOver(): 	# Check if the game is already over
             pass
 
-        board = self.board
-        rotateCount = self.moveList.index(moveDir)
+        board = self.board		
+        rotateCount = self.moveList.index(moveDir) # Keep a track of the rotations
         moved = False
         
-        if rotateCount:
+        if rotateCount:				# if required rotate the board
             board = self.rotateBoard(board, rotateCount)
 
         merged = [[0 for i in range(self.size)] for i in range(self.size)]
