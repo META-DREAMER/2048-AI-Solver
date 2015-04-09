@@ -4,19 +4,24 @@ class Engine:
     def __init__(self):
         self.board = [[0 for i in range(4)] for i in range(4)]
         self.score = 0
+        self.moves = 0
         self.add_random_block()
         self.add_random_block()
 
     def left(self):
+        self.moves += 1
         self.next(1)
 
     def right(self):
+        self.moves += 1
         self.next(3)
 
     def up(self):
+        self.moves += 1
         self.next(2)
 
     def down(self):
+        self.moves += 1
         self.next()
 
     def rotate_board(self, board, count):
