@@ -1,7 +1,7 @@
 from solver import *
 
 x = 0
-runs = 1
+runs = 0
 score = 0
 
 screen = curses.initscr()
@@ -22,7 +22,7 @@ curses.init_pair(10, curses.COLOR_BLACK, curses.COLOR_RED)
 curses.init_pair(11, curses.COLOR_BLACK, curses.COLOR_BLUE)
 curses.init_pair(12, curses.COLOR_BLACK, curses.COLOR_YELLOW)
 curses.init_pair(13, curses.COLOR_BLACK, curses.COLOR_WHITE)
-cursesBoard(makegame().board, screen)
+drawBoard(makeGame().board, screen)
 
 def getRuns():
 	curses.echo()
@@ -39,17 +39,17 @@ def getRuns():
 	curses.noecho()
 	if runs > 0:
 		return runs
-	return 1
+	return 0
 
 def drawEnd(game, screen):
 	screen.clear()
-	cursesBoard(game.board, screen)
+	drawBoard(game.board, screen)
 	screen.addstr(15, 5, "Score: " + str(game.score),curses.color_pair(3))
 	screen.addstr(16, 5, "Moves: " + str(game.moves),curses.color_pair(3))
 	screen.addstr(18, 5, "GAME OVER",curses.color_pair(4))
 	screen.refresh()
 
-while x != ord('3'):
+while True:
 	screen.border(0)
 	screen.addstr(2, 24, "2048 Machine Learning AI", curses.color_pair(1))
 	screen.addstr(3, 20, "- Hammad Jutt & Shivansh Singla", curses.color_pair(0))
@@ -63,12 +63,10 @@ while x != ord('3'):
 	x = screen.getch()
 	if x == ord('1'):
 		runs = getRuns()
-		curses.endwin()
 	if x == ord('2'):
 		drawEnd(solveGame(runs, screen), screen)
-		curses.endwin()
 	if x == ord('3'):
-		curses.endwin()
+		break
 
 curses.echo()
 curses.endwin()

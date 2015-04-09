@@ -1,35 +1,36 @@
-import engine, sys, random, os, curses
+import engine, random, curses
 
-COLORS = {0:0,2:1,4:2,8:3,16:4,32:5,64:6,128:7,256:8,512:9,1024:10,2048:11,4096:12,8192:13,16384:13}
+COLORS = {0:0,2:1,4:2,8:3,16:4,32:5,64:6,128:7,256:8,512:9,1024:10,2048:11,4096:12,8192:13,16384:13,32768:12}
 moveList = ['u','d','l','r']
 
-def makegame():
+def makeGame():
 	game = engine.Engine()
 	return game
 
-def cursesBoard(board, screen):
+def drawBoard(board, screen):
 	for row in enumerate(board):
 		for item in enumerate(row[1]):
 			screen.addstr(8+3*row[0], 40+6*item[0], str(item[1]), curses.color_pair(COLORS[item[1]]))
 	screen.refresh()
 
 def copyBoard(board):
-	newBoard = makegame().board
+	newBoard = makeGame().board
 	for row in enumerate(board):
 		for item in enumerate(row[1]):
 			newBoard[row[0]][item[0]] = item[1]
 	return newBoard
 
-def runRandom(board, move):
-	randomGame = makegame()
+def runRandom(board, firstMove):
+	randomGame = makeGame()
 	randomGame.board = copyBoard(board)
-	sendMove(randomGame, move)
+	sendMove(randomGame, firstMove)
 
 	while True:
-		if randomGame.is_board_locked():
+		if randomGame.isBoardLocked():
 			break
 		randMove = moveList[random.randint(0, 3)]
 		sendMove(randomGame, randMove)
+
 	return randomGame.score
 
 def bestMove(board, runs):
@@ -42,9 +43,11 @@ def bestMove(board, runs):
 			result = runRandom(board, moveDir)
 			average += result
 		average = average/runs
-		if average > bestScore:
+
+		if average >= bestScore:
 			bestScore = average
 			move = moveDir
+
 	return move
 
 def sendMove(game, move):
@@ -58,14 +61,17 @@ def sendMove(game, move):
 		game.right()
 
 def solveGame(runs, screen):
-	mainGame = makegame()
+	mainGame = makeGame()
 	counter = 0
 	while True:
-		if mainGame.is_board_locked():
+		if mainGame.isBoardLocked():
 			break
-		move = bestMove(mainGame.board, runs)
+		if runs > 0:
+			move = bestMove(mainGame.board, runs)
+		else:
+			move = moveList[random.randint(0, 3)]
 		sendMove(mainGame, move)
 		screen.clear()
 		screen.border(0)
-		cursesBoard(mainGame.board, screen)
+		drawBoard(mainGame.board, screen)
 	return(mainGame)
