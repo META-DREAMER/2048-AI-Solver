@@ -3,7 +3,6 @@ import random
 class Engine:
     def __init__(self):
         self.size = 4
-        # self.emptyBoard = [[0 for i in range(self.size)] for i in range(self.size)]
         self.board = [[0 for i in range(self.size)] for i in range(self.size)]
         self.score = 0
         self.numMoves = 0

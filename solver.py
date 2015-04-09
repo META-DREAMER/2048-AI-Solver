@@ -28,7 +28,7 @@ def runRandom(board, firstMove):
 	while True:
 		if randomGame.gameOver():
 			break
-		randMove = moveList[random.randint(0, len(moveList) - 1)]
+		randMove = random.choice(moveList)
 		randomGame.makeMove(randMove)
 
 	return randomGame.score
@@ -61,7 +61,7 @@ def solveGame(runs, screen):
 		if runs > 0:
 			move = bestMove(mainGame, runs)
 		else:
-			move = moveList[random.randint(0, len(moveList) - 1)]
+			move = random.choice(moveList)
 		mainGame.makeMove(move)
 		screen.clear()
 		drawBoard(mainGame.board, screen)
