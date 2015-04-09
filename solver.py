@@ -7,6 +7,9 @@ def makeGame():
 	return game
 
 def drawBoard(board, screen):
+	"""
+	Draws a given board on a given curses screen
+	"""
 	for row in enumerate(board):
 		for item in enumerate(row[1]):
 			screen.addstr(8+3*row[0], 40+6*item[0], str(item[1]), curses.color_pair(COLORS[item[1]]))
@@ -20,12 +23,16 @@ def copyBoard(board):
 	return newBoard
 
 def runRandom(board, firstMove):
-	randomGame = makeGame()
+	"""
+	Returns the end score of a given board played randomly after moving in a given direction.
+	"""
+	randomGame = makeGame()	#make a new game
 	moveList = randomGame.moveList
-	randomGame.board = copyBoard(board)
-	randomGame.makeMove(firstMove)
+	randomGame.board = copyBoard(board) #copy the given board to the new game
+	randomGame.makeMove(firstMove) #send the initial move
 
 	while True:
+		#keep sending random moves until game is over
 		if randomGame.gameOver():
 			break
 		randMove = random.choice(moveList)
@@ -34,6 +41,10 @@ def runRandom(board, firstMove):
 	return randomGame.score
 
 def bestMove(game, runs):
+	"""
+	Returns the best move for a given board.
+	Plays "runs" number of games for each possible move and calculates which move had best avg end score.
+	"""
 	average = 0
 	bestScore = 0
 	moveList = game.moveList
@@ -51,8 +62,11 @@ def bestMove(game, runs):
 	return move
 
 def solveGame(runs, screen):
+	"""
+	AI that plays a game till the end given a number of runs to make per move
+
+	"""
 	mainGame = makeGame()
-	counter = 0
 	moveList = mainGame.moveList
 
 	while True:
