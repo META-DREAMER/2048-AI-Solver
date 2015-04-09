@@ -32,29 +32,44 @@ class Engine:
         return score[val]
 
     def rotateBoard(self, board, count):
-        rotated = [[0 for i in range(self.size)] for i in range(self.size)]
+        for c in range(count):
+            rotated = [[0 for i in range(self.size)] for i in range(self.size)]
 
-        if count == 1:
             for row in range(self.size):
                 for col in range(self.size):
                     rotated[self.size - col - 1][row] = board[row][col]
-        elif count == 2:
-            for row in range(self.size):
-                for col in range(self.size):
-                    rotated[self.size - row - 1][col] = board[row][col]
-        elif count == 3:
-            for row in range(self.size):
-                for col in range(self.size):
-                    rotated[col][self.size - row-1] = board[row][col]
-        else:
-            return board
+
+            board = rotated
 
         return rotated
+
+    # def rotateBoard(self, board, count):
+    #     rotated = [[0 for i in range(self.size)] for i in range(self.size)]
+
+    #     if count == 1:
+    #         for row in range(self.size):
+    #             for col in range(self.size):
+    #                 rotated[self.size - col - 1][row] = board[row][col]
+    #     elif count == 2:
+    #         for row in range(self.size):
+    #             for col in range(self.size):
+    #                 rotated[self.size - col - 1][row] = board[row][col]
+    #         for row in range(self.size):
+    #             for col in range(self.size):
+    #                 rotated[self.size - col - 1][row] = board[row][col]
+    #     elif count == 3:
+    #         for row in range(self.size):
+    #             for col in range(self.size):
+    #                 rotated[col][self.size - row-1] = board[row][col]
+    #     else:
+    #         return board
+
+    #     return rotated
 
     def makeMove(self, moveDir):
         if self.gameOver():
             pass
-            
+
         board = self.board
         rotateCount = self.moveList.index(moveDir)
         moved = False
