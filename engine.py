@@ -36,9 +36,9 @@ class Engine:
         return score[val]
 
     def rotateBoard(self, board, count):
-        ''' 
+        """
         Rotate the board in order to make moves in different directions 
-        '''
+        """
         for c in range(count):
             rotated = [[0 for i in range(self.size)] for i in range(self.size)]
 
@@ -51,9 +51,9 @@ class Engine:
         return rotated
 
     def makeMove(self, moveDir):
-        ''' 
+        """
         Shift the board to make the given move
-        '''
+        """
         # Check if the game is already over
         if self.gameOver(): 	
             pass
@@ -95,7 +95,7 @@ class Engine:
 
                 if currentTile == nextTile:
                     #if three consecutive tiles of same value, dont merge first two
-                    if (row < 2 and nextTile == board[row+2][col]):
+                    if (row < self.size - 2 and nextTile == board[row+2][col]):
                         continue     
 
                     #merge tiles and set new value, shift all other tiles down
@@ -122,11 +122,11 @@ class Engine:
 
 
     def addRandBlock(self, val=None):
-        '''
+        """
         Places a random tile (either 2 or 4) on the board
         tile = 4: 10 percent chance 
         tile = 2: 90 percent chance
-        '''
+        """
         avail = self.availableSpots()
 
         if avail:
@@ -139,9 +139,9 @@ class Engine:
 
 
     def availableSpots(self):
-        ''' 
+        """
         Returns a list of all empty spaces on the board
-        '''
+        """
         spots = []
         for row in enumerate(self.board):
             for col in enumerate(row[1]):
@@ -150,9 +150,9 @@ class Engine:
         return spots
 
     def gameOver(self):
-        '''
+        """
         Returns True if no move can be made
-        '''
+        """
         if self.availableSpots():
             return False
 
